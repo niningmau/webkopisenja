@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Kopi Senja — Toko Kopi</title>
+<meta name="description" content="Toko kopi sederhana dengan biji pilihan Nusantara." />
+<style>
+  :root{
+    --cream:#f6f1e7;
+    --cream-2:#efe7d8;
+    --ink:#2b2118;
+    --ink-soft:#6b5d4f;
+    --bean:#4a2c1a;
+    --bean-2:#6b4226;
+    --accent:#c9702f;
+    --accent-2:#e0a15e;
+    --line:#e2d7c4;
+    --white:#fffdf9;
+    --radius:18px;
+    --shadow:0 18px 40px -20px rgba(43,33,24,.35);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:"Segoe UI",system-ui,-apple-system,sans-serif;
+    background:var(--cream);
+    color:var(--ink);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.brand{font-family:Georgia,"Times New Roman",serif;line-height:1.15}
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%;display:block}
+  .wrap{max-width:1100px;margin:0 auto;padding:0 22px}
+
+  /* Header */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(246,241,231,.85);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{display:flex;align-items:center;justify-content:space-between;height:70px}
+  .brand{font-size:1.4rem;font-weight:700;letter-spacing:.5px;color:var(--bean)}
+  .brand span{color:var(--accent)}
+  .links{display:flex;gap:26px;align-items:center}
+  .links a{font-size:.92rem;color:var(--ink-soft);font-weight:500;transition:color .2s}
+  .links a:hover{color:var(--accent)}
+  .cart-btn{
+    background:var(--bean);color:var(--cream);border:none;cursor:pointer;
+    padding:9px 16px;border-radius:999px;font-size:.88rem;font-weight:600;
+    display:flex;align-items:center;gap:7px;transition:background .2s;
+  }
+  .cart-btn:hover{background:var(--bean-2)}
+  .cart-count{
+    background:var(--accent);color:#fff;border-radius:999px;
+    min-width:20px;height:20px;font-size:.72rem;display:grid;place-items:center;padding:0 5px;
+  }
+
+  /* Hero */
+  .hero{padding:72px 0 60px;position:relative;overflow:hidden}
+  .hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    background:var(--cream-2);border:1px solid var(--line);
+    color:var(--bean-2);font-size:.78rem;font-weight:600;letter-spacing:.6px;
+    text-transform:uppercase;padding:6px 12px;border-radius:999px;margin-bottom:18px;
+  }
+  .eyebrow::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--accent)}
+  .hero h1{font-size:clamp(2.4rem,5vw,3.6rem);color:var(--bean);letter-spacing:-.5px}
+  .hero h1 em{font-style:italic;color:var(--accent)}
+  .hero p{margin:18px 0 28px;color:var(--ink-soft);font-size:1.05rem;max-width:440px}
+  .cta-row{display:flex;gap:12px;flex-wrap:wrap}
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:12px 24px;border-radius:999px;font-weight:600;font-size:.95rem;
+    transition:transform .15s,box-shadow .2s,background .2s;border:1px solid transparent;cursor:pointer;
+  }
+  .btn-primary{background:var(--accent);color:#fff;box-shadow:0 12px 24px -12px rgba(201,112,47,.8)}
+  .btn-primary:hover{transform:translateY(-2px);background:#b9631f}
+  .btn-ghost{background:transparent;border-color:var(--line);color:var(--bean)}
+  .btn-ghost:hover{background:var(--cream-2)}
+
+  .hero-art{
+    aspect-ratio:1/1;border-radius:28px;overflow:hidden;
+    position:relative;box-shadow:var(--shadow);
+  }
+  .hero-art img{
+    width:100%;height:100%;object-fit:cover;
+    transition:transform .8s ease;
+  }
+  .hero-art:hover img{transform:scale(1.05)}
+  .hero-art::after{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(to top,rgba(43,33,24,.25),transparent 45%);
+    pointer-events:none;
+  }
+  .hero-art .ring{
+    position:absolute;inset:14px;border:1px solid rgba(255,255,255,.35);border-radius:20px;z-index:2;
+  }
+  .badge-float{
+    position:absolute;background:var(--white);border:1px solid var(--line);
+    border-radius:14px;padding:12px 16px;font-size:.8rem;box-shadow:var(--shadow);
+    display:flex;flex-direction:column;gap:1px;z-index:3;
+  }
+  .badge-float b{display:block;color:var(--bean);font-size:.92rem}
+  .badge-float small{color:var(--ink-soft)}
+  .bf-1{bottom:18px;left:18px}
+  .bf-2{top:18px;right:18px}
+
+  /* Sections */
+  section{padding:64px 0}
+  .sec-head{text-align:center;max-width:560px;margin:0 auto 44px}
+  .sec-head h2{font-size:clamp(1.8rem,3.4vw,2.5rem);color:var(--bean);margin-bottom:10px}
+  .sec-head p{color:var(--ink-soft)}
+
+  /* Menu grid */
+  .menu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:22px}
+  .card{
+    background:var(--white);border:1px solid var(--line);border-radius:var(--radius);
+    overflow:hidden;display:flex;flex-direction:column;
+    transition:transform .22s,box-shadow .22s;
+  }
+  .card:hover{transform:translateY(-5px);box-shadow:var(--shadow)}
+  .card-img{
+    aspect-ratio:4/3;position:relative;overflow:hidden;background:var(--cream-2);
+  }
+  .card-img img{
+    width:100%;height:100%;object-fit:cover;
+    transition:transform .5s ease;
+  }
+  .card:hover .card-img img{transform:scale(1.07)}
+  .card-img .shot-tag{
+    position:absolute;top:12px;right:12px;width:9px;height:9px;border-radius:50%;
+    background:var(--accent);box-shadow:0 0 0 3px rgba(255,255,255,.7);z-index:2;
+  }
+  .card-body{padding:18px 18px 20px;display:flex;flex-direction:column;flex:1}
+  .card-body h3{font-size:1.15rem;color:var(--bean);margin-bottom:4px}
+  .card-body .desc{font-size:.85rem;color:var(--ink-soft);margin-bottom:16px;flex:1}
+  .card-foot{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .price{font-weight:700;color:var(--accent);font-size:1rem}
+  .add{
+    border:1px solid var(--bean);background:transparent;color:var(--bean);
+    border-radius:999px;padding:7px 14px;font-size:.82rem;font-weight:600;cursor:pointer;
+    transition:background .2s,color .2s;
+  }
+  .add:hover,.add.added{background:var(--bean);color:var(--cream)}
+
+  /* About */
+  .about{background:var(--cream-2);border-block:1px solid var(--line)}
+  .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:center}
+  .about h2{font-size:clamp(1.8rem,3.4vw,2.5rem);color:var(--bean);margin-bottom:16px}
+  .about p{color:var(--ink-soft);margin-bottom:14px}
+  .stats{display:flex;gap:30px;margin-top:26px;flex-wrap:wrap}
+  .stat b{font-family:Georgia,serif;font-size:2rem;color:var(--accent);line-height:1}
+  .stat span{font-size:.82rem;color:var(--ink-soft)}
+  .about-art{
+    aspect-ratio:4/3;border-radius:var(--radius);box-shadow:var(--shadow);
+    overflow:hidden;position:relative;
+  }
+  .about-art img{width:100%;height:100%;object-fit:cover}
+  .about-art span{
+    position:absolute;left:16px;bottom:16px;color:#fff;
+    font-family:Georgia,serif;font-size:1.05rem;letter-spacing:1px;
+    text-shadow:0 2px 10px rgba(0,0,0,.5);
+  }
+
+  /* Footer */
+  footer{background:var(--bean);color:#e9ddcb;padding:48px 0 28px}
+  .foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:32px;margin-bottom:36px}
+  footer .brand{color:var(--cream);margin-bottom:10px}
+  footer .brand span{color:var(--accent-2)}
+  footer p{font-size:.88rem;opacity:.75;max-width:300px}
+  footer h4{font-size:.82rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;color:var(--accent-2)}
+  footer ul{list-style:none}
+  footer li{font-size:.88rem;opacity:.78;margin-bottom:9px}
+  footer li a:hover{opacity:1;color:var(--accent-2)}
+  .foot-bottom{border-top:1px solid rgba(255,255,255,.12);padding-top:22px;text-align:center;font-size:.8rem;opacity:.6}
+
+  /* Cart drawer */
+  .overlay{
+    position:fixed;inset:0;background:rgba(43,33,24,.5);opacity:0;visibility:hidden;
+    transition:opacity .25s,visibility .25s;z-index:90;
+  }
+  .overlay.open{opacity:1;visibility:visible}
+  .drawer{
+    position:fixed;top:0;right:0;height:100%;width:min(400px,90vw);
+    background:var(--white);z-index:100;transform:translateX(100%);
+    transition:transform .3s cubic-bezier(.4,0,.2,1);
+    display:flex;flex-direction:column;box-shadow:-20px 0 40px -20px rgba(0,0,0,.3);
+  }
+  .drawer.open{transform:translateX(0)}
+  .drawer-head{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:20px 22px;border-bottom:1px solid var(--line);
+  }
+  .drawer-head h3{color:var(--bean);font-size:1.25rem}
+  .close{
+    background:none;border:none;font-size:1.6rem;line-height:1;cursor:pointer;
+    color:var(--ink-soft);width:34px;height:34px;border-radius:50%;
+  }
+  .close:hover{background:var(--cream-2)}
+  .drawer-body{flex:1;overflow-y:auto;padding:18px 22px}
+  .empty{text-align:center;color:var(--ink-soft);padding:48px 0;font-size:.92rem}
+  .empty span{display:block;font-size:2.4rem;margin-bottom:12px;opacity:.5}
+  .line-item{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--line);align-items:center}
+  .li-emoji{
+    width:46px;height:46px;border-radius:12px;overflow:hidden;
+    background:var(--cream-2);flex-shrink:0;
+  }
+  .li-emoji img{width:100%;height:100%;object-fit:cover}
+  .li-info{flex:1;min-width:0}
+  .li-info b{display:block;font-size:.92rem;color:var(--bean)}
+  .li-info small{color:var(--ink-soft);font-size:.8rem}
+  .qty{display:flex;align-items:center;gap:8px;margin-top:6px}
+  .qty button{
+    width:24px;height:24px;border-radius:6px;border:1px solid var(--line);
+    background:var(--white);cursor:pointer;font-size:.9rem;line-height:1;color:var(--bean);
+  }
+  .qty button:hover{background:var(--cream-2)}
+  .qty span{font-size:.85rem;min-width:18px;text-align:center;font-weight:600}
+  .li-price{font-weight:700;color:var(--accent);font-size:.9rem;white-space:nowrap}
+  .drawer-foot{padding:20px 22px;border-top:1px solid var(--line);background:var(--cream)}
+  .total-row{display:flex;justify-content:space-between;font-weight:700;margin-bottom:16px;color:var(--bean)}
+  .total-row span:last-child{font-size:1.25rem;color:var(--accent)}
+  .checkout{
+    width:100%;padding:14px;border-radius:12px;border:none;cursor:pointer;
+    background:var(--accent);color:#fff;font-weight:700;font-size:.95rem;
+    transition:background .2s;
+  }
+  .checkout:hover{background:#b9631f}
+  .checkout:disabled{background:#c9bfae;cursor:not-allowed}
+
+  /* Toast */
+  .toast{
+    position:fixed;bottom:26px;left:50%;transform:translate(-50%,120%);
+    background:var(--bean);color:var(--cream);padding:12px 22px;border-radius:999px;
+    font-size:.88rem;font-weight:500;z-index:200;transition:transform .3s;box-shadow:var(--shadow);
+    white-space:nowrap;
+  }
+  .toast.show{transform:translate(-50%,0)}
+
+  @media(max-width:820px){
+    .hero-grid{grid-template-columns:1fr;gap:36px}
+    .hero-art{max-width:340px;margin:0 auto;order:-1}
+    .bf-1,.bf-2{display:none}
+    .about-grid{grid-template-columns:1fr}
+    .about-art{order:-1}
+    .foot-grid{grid-template-columns:1fr 1fr}
+    .links a:not(.cart-btn){display:none}
+  }
+  @media(max-width:520px){
+    .foot-grid{grid-template-columns:1fr}
+    section{padding:48px 0}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a href="#" class="brand">Kopi<span>Senja</span></a>
+    <nav class="links">
+      <a href="#menu">Menu</a>
+      <a href="#tentang">Tentang</a>
+      <button class="cart-btn" id="cartBtn">
+        🛒 Keranjang <span class="cart-count" id="cartCount">0</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="eyebrow">Biji pilihan Nusantara</span>
+        <h1>Secangkir kopi,<br>sejuta <em>cerita</em>.</h1>
+        <p>Dari dataran tinggi Gayo hingga Toraja, kami sangrai biji terbaik setiap minggu agar rasanya selalu segar di cangkirmu.</p>
+        <div class="cta-row">
+          <a href="#menu" class="btn btn-primary">Lihat Menu →</a>
+          <a href="#tentang" class="btn btn-ghost">Tentang Kami</a>
+        </div>
+      </div>
+      <div class="hero-art">
+        <img src="assets/coffee1.jpg" alt="Secangkir espresso Kopi Senja di atas meja kayu" />
+        <span class="ring"></span>
+        <div class="badge-float bf-1">
+          <b>Roasted Fresh</b>
+          <small>tiap minggu</small>
+        </div>
+        <div class="badge-float bf-2">
+          <b>4.9 ★</b>
+          <small>1.2k ulasan</small>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="menu">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Menu Favorit</h2>
+        <p>Diseduh dengan tangan, disajikan dengan hati. Pilih favoritmu.</p>
+      </div>
+      <div class="menu-grid" id="menuGrid"></div>
+    </div>
+  </section>
+
+  <section class="about" id="tentang">
+    <div class="wrap about-grid">
+      <div>
+        <h2>Kopi yang jujur, dari petani ke cangkirmu</h2>
+        <p>Kopi Senja berdiri sejak 2018 dengan satu keyakinan: kopi terbaik lahir dari hubungan yang adil dengan para petani.</p>
+        <p>Kami bekerja langsung dengan 12 keluarga petani di Gayo, Toraja, dan Kintamani. Setiap biji disortir tangan dan disangrai dalam batch kecil.</p>
+        <div class="stats">
+          <div class="stat"><b>12</b><span>Petani mitra</span></div>
+          <div class="stat"><b>6</b><span>Tahun pengalaman</span></div>
+          <div class="stat"><b>4.9</b><span>Rating pelanggan</span></div>
+        </div>
+      </div>
+      <div class="about-art">
+        <img src="assets/capc.jpg" alt="Cappuccino dan kue di meja kayu Kopi Senja" />
+        <span>DARI PETANI UNTUK KAMU</span>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="brand">Kopi<span>Senja</span></div>
+        <p>Menghadirkan secangkir kebahagiaan dari biji kopi Nusantara terbaik.</p>
+      </div>
+      <div>
+        <h4>Navigasi</h4>
+        <ul>
+          <li><a href="#menu">Menu</a></li>
+          <li><a href="#tentang">Tentang</a></li>
+          <li><a href="#menu">Best Seller</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Kontak</h4>
+        <ul>
+          <li>Jl. Senja No. 12, Bandung</li>
+          <li>0812-3456-7890</li>
+          <li>halo@kopisenja.id</li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">© 2026 Kopi Senja. Dibuat dengan secangkir kopi.</div>
+  </div>
+</footer>
+
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="drawer" aria-label="Keranjang belanja">
+  <div class="drawer-head">
+    <h3>Keranjang</h3>
+    <button class="close" id="closeCart" aria-label="Tutup">×</button>
+  </div>
+  <div class="drawer-body" id="drawerBody"></div>
+  <div class="drawer-foot">
+    <div class="total-row"><span>Total</span><span id="total">Rp0</span></div>
+    <button class="checkout" id="checkout" disabled>Checkout</button>
+  </div>
+</aside>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const menu = [
+    { id: 1, name: "Espresso",     desc: "Pekat, kuat, murni. Single shot 30ml.", price: 22000, img: "assets/coffee1.jpg" },
+    { id: 2, name: "Cappuccino",   desc: "Espresso, susu steamed, dan foam lembut.", price: 32000, img: "assets/capsav.jpg" },
+    { id: 3, name: "Kopi Susu Gula Aren", desc: "Kopi susu kekinian dengan manis alami.", price: 28000, img: "assets/coffee3.jpg" },
+    { id: 4, name: "Americano",    desc: "Espresso dengan air panas. Bersih & ringan.", price: 25000, img: "assets/coffee4.jpg" },
+    { id: 5, name: "Mocha",        desc: "Perpaduan kopi, cokelat, dan susu.", price: 35000, img: "assets/coffee5.jpg" },
+    { id: 6, name: "Cold Brew",    desc: "Diseduh dingin 18 jam. Segar & smooth.", price: 30000, img: "assets/coffee6.jpg" }
+  ];
+
+  const rupiah = n => "Rp" + n.toLocaleString("id-ID");
+  let cart = {};
+
+  const menuGrid   = document.getElementById("menuGrid");
+  const drawer     = document.getElementById("drawer");
+  const overlay    = document.getElementById("overlay");
+  const drawerBody = document.getElementById("drawerBody");
+  const cartCount  = document.getElementById("cartCount");
+  const totalEl    = document.getElementById("total");
+  const checkout   = document.getElementById("checkout");
+  const toastEl    = document.getElementById("toast");
+  let toastTimer;
+
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toastEl.classList.remove("show"), 2000);
+  }
+
+  function renderMenu() {
+    menuGrid.innerHTML = menu.map(item => `
+      <article class="card">
+        <div class="card-img">
+          <img src="${item.img}" alt="${item.name} dalam cangkir enamel" loading="lazy" />
+          <span class="shot-tag"></span>
+        </div>
+        <div class="card-body">
+          <h3>${item.name}</h3>
+          <p class="desc">${item.desc}</p>
+          <div class="card-foot">
+            <span class="price">${rupiah(item.price)}</span>
+            <button class="add" data-id="${item.id}">+ Tambah</button>
+          </div>
+        </div>
+      </article>
+    `).join("");
+  }
+
+  function renderCart() {
+    const entries = Object.values(cart);
+    const totalQty = entries.reduce((s, i) => s + i.qty, 0);
+    cartCount.textContent = totalQty;
+
+    if (!entries.length) {
+      drawerBody.innerHTML = `<div class="empty"><span>🛒</span>Keranjang masih kosong.<br>Yuk pilih kopi favoritmu!</div>`;
+      totalEl.textContent = rupiah(0);
+      checkout.disabled = true;
+      return;
+    }
+
+    let total = 0;
+    drawerBody.innerHTML = entries.map(i => {
+      total += i.price * i.qty;
+      return `
+        <div class="line-item">
+          <div class="li-emoji"><img src="${i.img}" alt="" /></div>
+          <div class="li-info">
+            <b>${i.name}</b>
+            <small>${rupiah(i.price)}</small>
+            <div class="qty">
+              <button data-act="dec" data-id="${i.id}">−</button>
+              <span>${i.qty}</span>
+              <button data-act="inc" data-id="${i.id}">+</button>
+            </div>
+          </div>
+          <div class="li-price">${rupiah(i.price * i.qty)}</div>
+        </div>`;
+    }).join("");
+
+    totalEl.textContent = rupiah(total);
+    checkout.disabled = false;
+  }
+
+  function addToCart(id) {
+    const item = menu.find(m => m.id === id);
+    if (!cart[id]) cart[id] = { ...item, qty: 0 };
+    cart[id].qty++;
+    renderCart();
+    toast(`${item.name} ditambahkan`);
+  }
+
+  function changeQty(id, delta) {
+    if (!cart[id]) return;
+    cart[id].qty += delta;
+    if (cart[id].qty <= 0) delete cart[id];
+    renderCart();
+  }
+
+  function openCart()  { drawer.classList.add("open"); overlay.classList.add("open"); }
+  function closeCart() { drawer.classList.remove("open"); overlay.classList.remove("open"); }
+
+  menuGrid.addEventListener("click", e => {
+    const btn = e.target.closest(".add");
+    if (!btn) return;
+    addToCart(Number(btn.dataset.id));
+    btn.textContent = "✓ Ditambah";
+    btn.classList.add("added");
+    setTimeout(() => { btn.textContent = "+ Tambah"; btn.classList.remove("added"); }, 1200);
+  });
+
+  drawerBody.addEventListener("click", e => {
+    const btn = e.target.closest("button[data-act]");
+    if (!btn) return;
+    changeQty(Number(btn.dataset.id), btn.dataset.act === "inc" ? 1 : -1);
+  });
+
+  document.getElementById("cartBtn").addEventListener("click", openCart);
+  document.getElementById("closeCart").addEventListener("click", closeCart);
+  overlay.addEventListener("click", closeCart);
+  document.addEventListener("keydown", e => { if (e.key === "Escape") closeCart(); });
+
+  checkout.addEventListener("click", () => {
+    if (checkout.disabled) return;
+    toast("Pesanan diterima! Terima kasih ☕");
+    cart = {};
+    renderCart();
+    setTimeout(closeCart, 700);
+  });
+
+  renderMenu();
+  renderCart();
+</script>
+</body>
+</html>
